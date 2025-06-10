@@ -1,0 +1,55 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+
+<suite name="FullRegressionSuite" verbose="1">
+    <test name="Positive Login Test">
+        <parameter name="browser" value="firefox"></parameter>
+        <classes>
+            <class name="com.practicetestautomation.tests.login.LoginTests">
+                <methods>
+                    <include name="testLoginOne"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+    <test name="Positive Login Test in Chrome">
+        <parameter name="browser" value="safari"></parameter>
+        <classes>
+            <class name="com.practicetestautomation.tests.login.LoginTests">
+                <methods>
+                    <include name="testLoginOne"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+    <test name="Incorrect Username Test">
+        <parameter name="browser" value="chrome"></parameter>
+        <parameter name="username" value="incorrectUser"></parameter>
+        <parameter name="password" value="Password123"></parameter>
+        <parameter name="expectedErrorMessage" value="Your username is invalid!"></parameter>
+
+        <classes>
+            <class name="com.practicetestautomation.tests.login.LoginTests">
+                <methods>
+                    <include name="negativeLoginTest"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+    <test name="Incorrect Password Test">
+        <parameter name="browser" value="firefox"></parameter>
+        <parameter name="username" value="student"></parameter>
+        <parameter name="password" value="incorrectPassword"></parameter>
+        <parameter name="expectedErrorMessage" value="Your password is invalid!"></parameter>
+
+        <classes>
+            <class name="com.practicetestautomation.tests.login.LoginTests">
+                <methods>
+                    <include name="negativeLoginTest"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+</suite>
