@@ -6,7 +6,7 @@
         <classes>
             <class name="com.practicetestautomation.tests.login.LoginTests">
                 <methods>
-                    <include name="testLoginOne"/>
+                    <include name="testLoginFunctionality"/>
                 </methods>
             </class>
         </classes>
@@ -17,14 +17,14 @@
         <classes>
             <class name="com.practicetestautomation.tests.login.LoginTests">
                 <methods>
-                    <include name="testLoginOne"/>
+                    <include name="testLoginFunctionality"/>
                 </methods>
             </class>
         </classes>
     </test>
 
     <test name="Incorrect Username Test">
-        <parameter name="browser" value="chrome"></parameter>
+        <parameter name="browser" value="firefox"></parameter>
         <parameter name="username" value="incorrectUser"></parameter>
         <parameter name="password" value="Password123"></parameter>
         <parameter name="expectedErrorMessage" value="Your username is invalid!"></parameter>

@@ -1,12 +1,12 @@
 package com.practicetestautomation.tests.login;
 
+import com.practicetestautomation.pageobjects.LoginPage;
+import com.practicetestautomation.pageobjects.SuccessfulLoginPage;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.bidi.log.Log;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.safari.SafariDriver;
 import org.testng.Assert;
 import org.testng.annotations.*;
 
@@ -35,9 +35,6 @@ public class LoginTests {
                 driver = new ChromeDriver();
                 break;
         }
-        driver = new FirefoxDriver();
-        // Open page
-        driver.get("https://practicetestautomation.com/practice-test-login/");
     }
 
     @AfterMethod(alwaysRun = true)
@@ -46,77 +43,29 @@ public class LoginTests {
         driver.quit();
     }
     @Test(groups = {"positive", "regression", "smoke"})
-    public void testLoginOne(){
-        logger.info("Staring testLoginOne");
-        // Type username student into Username field
-        WebElement usernameInput = driver.findElement(By.id("username"));
-        logger.info("Type username");
-        //usernameInput.sendKeys("student");
-        usernameInput.sendKeys("student");
-        // Type password Password123 into Password field
-        WebElement passwordInput = driver.findElement(By.id("password"));
-        logger.info("Type password");
-        passwordInput.sendKeys("Password123");
+    public void testLoginFunctionality(){
+        logger.info("Staring testLoginFunctionality");
+        LoginPage loginPage = new LoginPage(driver);
+        loginPage.visit();
+        SuccessfulLoginPage successfulLoginPage = loginPage.executeLogin("student", "Password123");
+        successfulLoginPage.load();
 
-        // Push Submit button
-        WebElement submitButton = driver.findElement(By.id("submit"));
-        logger.info("Click submit button");
-        submitButton.click();
-
-        try {
-            Thread.sleep(2000); // to add a pause
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-
-        // Verify new page URL contains practicetestautomation.com/logged-in-successfully/
         logger.info("Verify login functionality");
-        String expectedPageUrl = "https://practicetestautomation.com/logged-in-successfully/";
-        String actualUrl = driver.getCurrentUrl();
-        Assert.assertEquals(actualUrl,expectedPageUrl);
+        Assert.assertEquals(successfulLoginPage.getCurrentUrl(),"https://practicetestautomation.com/logged-in-successfully/");
 
-        // Verify new page contains expected text ('Congratulations' or 'successfully logged in')
         logger.info("Verify login message");
-        String expectedMessage = "Congratulations student. You successfully logged in!";
-        String pageSource = driver.getPageSource();
-        Assert.assertTrue(pageSource.contains(expectedMessage));
+        Assert.assertTrue(successfulLoginPage.getPageSource().contains("Congratulations student. You successfully logged in!"));
 
-        // Verify button Log out is displayed on the new page
-        logger.info("Verify logout button visibility");
-        WebElement logoutButton = driver.findElement(By.linkText("Log out"));
-        Assert.assertTrue(logoutButton.isDisplayed());
+        Assert.assertTrue(successfulLoginPage.isLogoutButtonDisplayed());
     }
     @Parameters({"username","password","expectedErrorMessage"})
     @Test (groups = {"negative", "regression"})
     public void negativeLoginTest(String username, String password, String expectedErrorMessage) {
         logger.info("Starting negativeLoginTest");
-        // Type username incorrectUser into Username field
-        WebElement usernameInput = driver.findElement(By.id("username"));
-        logger.info("Type username" + username);
-        usernameInput.sendKeys(username);
-        // Type password Password123 into Password field
-        WebElement passwordInput = driver.findElement(By.id("password"));
-        logger.info("Type password");
-        passwordInput.sendKeys(password);
+        LoginPage loginPage = new LoginPage(driver);
+        loginPage.visit();
+        loginPage.executeLogin(username, password);
+        Assert.assertEquals(loginPage.getErrorMessage(),expectedErrorMessage);
 
-        // Push Submit button
-        WebElement submitButton = driver.findElement(By.id("submit"));
-        logger.info("Click submit button");
-        submitButton.click();
-
-        try {
-            Thread.sleep(2000); // to add a pause
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-
-        // Verify error message is displayed
-        logger.info("Verify the expected error message" + expectedErrorMessage);
-        WebElement errorMessage = driver.findElement(By.id("error"));
-        Assert.assertTrue(errorMessage.isDisplayed());
-        // Verify error message text is Your username is invalid!
-        logger.info("Verify error message");
-        String actualErrorMessage = errorMessage.getText();
-        Assert.assertEquals(actualErrorMessage, expectedErrorMessage);
     }
 }
