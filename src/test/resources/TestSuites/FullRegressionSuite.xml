@@ -52,4 +52,11 @@
             </class>
         </classes>
     </test>
+
+    <test name="Exceptions Tests">
+        <parameter name="browser" value="firefox"></parameter>
+        <classes>
+            <class name="com.practicetestautomation.tests.exceptions.ExceptionTests"></class>
+        </classes>
+    </test>
 </suite>
